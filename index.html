@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>منصة أمانة - لمكافحة تعديات المياه</title>
+    <style>
+      :root {
+        --primary: #5c24fc;
+        --primary-light: #8257ff;
+        --accent-orange: #ff9f43;
+        --bg-dark: #0b0813;
+        --card-bg: rgba(255, 255, 255, 0.02);
+        --text-light: #f3f1ff;
+        --danger: #ff3366;
+        --success: #00e676;
+        --glow: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+        overflow-x: hidden;
+        line-height: 1.6;
+        background-image:
+          radial-gradient(
+            circle at 10% 20%,
+            rgba(92, 36, 252, 0.15) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 90% 80%,
+            rgba(255, 159, 67, 0.08) 0%,
+            transparent 40%
+          );
+      }
+
+      /* الهيدر الفخم */
+      header {
+        background: rgba(15, 11, 28, 0.8);
+        backdrop-filter: blur(12px);
+        padding: 20px 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(92, 36, 252, 0.25);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .logo-area {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      /* محاكاة الشعار برمجياً بقوة الـ CSS */
+      .logo-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 2px solid var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 18px;
+        color: var(--text-light);
+        background: linear-gradient(135deg, #18122b, #0f0c1b);
+        box-shadow: 0 0 15px rgba(130, 87, 255, 0.4);
+        letter-spacing: -1px;
+      }
+
+      .logo-text h1 {
+        font-size: 20px;
+        background: linear-gradient(to left, #fff, var(--primary-light));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .logo-text p {
+        font-size: 11px;
+        color: #8257ff;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      /* الواجهة الترحيبية الراقية */
+      .hero-section {
+        text-align: center;
+        padding: 80px 20px 40px 20px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .hero-section h2 {
+        font-size: 42px;
+        font-weight: 800;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #fff 30%, #bca8ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero-section p {
+        color: #9d99b5;
+        font-size: 18px;
+        max-width: 700px;
+        margin: 0 auto 40px auto;
+      }
+
+      /* لافتة التوعية الفاخرة */
+      .premium-banner {
+        background: linear-gradient(
+          135deg,
+          rgba(92, 36, 252, 0.1) 0%,
+          rgba(255, 159, 67, 0.05) 100%
+        );
+        border: 1px solid rgba(130, 87, 255, 0.2);
+        border-radius: 24px;
+        padding: 35px;
+        margin-bottom: 60px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        position: relative;
+        backdrop-filter: blur(10px);
+      }
+
+      .premium-banner::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 24px;
+        padding: 1px;
+        background: linear-gradient(
+          to bottom right,
+          rgba(130, 87, 255, 0.5),
+          transparent,
+          rgba(255, 159, 67, 0.3)
+        );
+        -webkit-mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+
+      .premium-banner h3 {
+        color: var(--success);
+        font-size: 22px;
+        margin-bottom: 12px;
+        text-shadow: 0 0 15px rgba(0, 230, 118, 0.2);
+      }
+
+      .premium-banner p {
+        font-size: 16px;
+        color: #d1cee7;
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.8;
+      }
+
+      /* الحاوية المنقسمة للفورمات */
+      .grid-forms {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        max-width: 1100px;
+        margin: 0 auto 80px auto;
+        padding: 0 20px;
+      }
+
+      @media (max-width: 768px) {
+        .grid-forms {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 40px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.3s var(--glow),
+          box-shadow 0.3s var(--glow);
+      }
+
+      .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(92, 36, 252, 0.15);
+        border-color: rgba(130, 87, 255, 0.2);
+      }
+
+      .glass-card h4 {
+        font-size: 22px;
+        color: var(--text-light);
+        margin-bottom: 25px;
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .glass-card h4::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 40px;
+        height: 3px;
+        background: var(--primary-light);
+        border-radius: 2px;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #aaa5c3;
+        font-weight: 500;
+      }
+
+      .form-control {
+        width: 100%;
+        background: rgba(11, 8, 19, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 14px 18px;
+        color: white;
+        font-size: 15px;
+        transition: all 0.3s;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        background: rgba(11, 8, 19, 0.9);
+        box-shadow: 0 0 15px rgba(130, 87, 255, 0.25);
+      }
+
+      .btn {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 15px;
+        width: 100%;
+        transition: all 0.3s var(--glow);
+        box-shadow: 0 5px 20px rgba(92, 36, 252, 0.3);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(92, 36, 252, 0.5);
+        filter: brightness(1.1);
+      }
+
+      .btn-danger {
+        background: linear-gradient(135deg, #d61c4e, var(--danger));
+        box-shadow: 0 5px 20px rgba(255, 51, 102, 0.2);
+      }
+      .btn-danger:hover {
+        box-shadow: 0 8px 25px rgba(255, 51, 102, 0.4);
+      }
+
+      /* فوتر فخم يحمل بصمة شركتك */
+      footer {
+        background: #06040a;
+        padding: 40px 20px;
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.03);
+        font-size: 14px;
+        color: #6a6687;
+      }
+
+      footer .company-signature {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #8257ff;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo-area">
+        <div class="logo-icon">HO</div>
+        <div class="logo-text">
+          <h1>Horizon Optics</h1>
+          <p>Programming & Design</p>
+        </div>
+      </div>
+      <div
+        style="
+          font-size: 13px;
+          color: #a5a1ff;
+          background: rgba(92, 36, 252, 0.1);
+          padding: 6px 16px;
+          border-radius: 20px;
+          border: 1px solid rgba(92, 36, 252, 0.2);
+        "
+      >
+        منصة حماية المياه العامة
+      </div>
+    </header>
+
+    <div class="hero-section">
+      <h2>معاً لحماية شبكة مياه البلدة</h2>
+      <p>
+        مبادرة أهلية تهدف إلى رصد التعديات وتطوير حلول هندسية ومجتمعية تضمن وصول
+        المياه بشكل عادل وآمن لجميع منازل البلدة دون استثناء.
+      </p>
+
+      <div class="premium-banner">
+        <h3>"الأمانة والمسؤولية المجتمعية"</h3>
+        <p>
+          إن سرقة المياه عبر الخطوط الفرعية غير القانونية لا تضر بجهات التنظيم
+          فحسب، بل تحرم جارك المباشر وأهل حارتك من تدفق المياه وتضعف الضغط
+          العام. المساهمة في الحل هي واجب أخلاقي وديني يحمي حقوق الجميع.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid-forms">
+      <div class="glass-card">
+        <h4>تبليغ سري آمن عن مخالفة</h4>
+        <form id="reportForm" onsubmit="submitToLocal(event, 'تبليغ')">
+          <div class="form-group">
+            <label>الموقع التقريبي أو اسم الحارة</label>
+            <input
+              type="text"
+              class="form-control"
+              id="repLocation"
+              placeholder="مثال: الحارة الشمالية، خلف خزان التوزيع الرئيسي"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>تفاصيل أو ملاحظات دقيقة للمساعدة</label>
+            <textarea
+              class="form-control"
+              id="repDetails"
+              rows="3"
+              placeholder="أدخل أي ملاحظات تساعد اللجان المختصة في الكشف الفوري والمباشر عن المخالفة..."
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-danger">
+            إرسال التبليغ الآمن
+          </button>
+        </form>
+      </div>
+
+      <div class="glass-card">
+        <h4>طرح مقترح أو حل هندسي للبلدة</h4>
+        <form id="suggestForm" onsubmit="submitToLocal(event, 'مقترح حَل')">
+          <div class="form-group">
+            <label>فكرتك المقترحة لحل مشكلة السرقات نهائياً</label>
+            <input
+              type="text"
+              class="form-control"
+              id="sugText"
+              placeholder="مثال: طمر الأنابيب بعمق وتثبيت مستشعرات تدفق رقمية"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>شرح أو آلية تطبيق الحل (اختياري)</label>
+            <textarea
+              class="form-control"
+              id="sugDetails"
+              rows="3"
+              placeholder="كيف ترى الطريقة الأمثل لتطبيق هذا المقترح على أرض الواقع بالبلدة؟"
+            ></textarea>
+          </div>
+          <button type="submit" class="btn">تقديم المقترح للمناقشة</button>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 جميع الحقوق محفوظة لمجلس بلدة حفير الفوقا.</p>
+      <div class="company-signature">
+        Designed & Developed by Horizon Optics
+      </div>
+    </footer>
+
+    <script>
+      function submitToLocal(event, type) {
+        event.preventDefault();
+
+        let content = "";
+        let details = "";
+
+        if (type === "تبليغ") {
+          content = document.getElementById("repLocation").value;
+          details =
+            document.getElementById("repDetails").value ||
+            "لا توجد ملاحظات إضافية";
+          document.getElementById("reportForm").reset();
+        } else {
+          content = document.getElementById("sugText").value;
+          details =
+            document.getElementById("sugDetails").value ||
+            "لا توجد تفاصيل إضافية";
+          document.getElementById("suggestForm").reset();
+        }
+
+        const timestamp = new Date().toLocaleString("ar-EG");
+        const newMessage = { timestamp, type, content, details };
+
+        // حفظ في الـ LocalStorage ليتم قراءتها من صفحة لوحة التحكم على جهازك
+        let messages =
+          JSON.parse(localStorage.getItem("town_water_secure_data")) || [];
+        messages.unshift(newMessage);
+        localStorage.setItem(
+          "town_water_secure_data",
+          JSON.stringify(messages),
+        );
+
+        alert(
+          "نشكر أمانتك وحرصك! تم استلام رسالتك وتشفيرها بنجاح لإحالتها للمراجعة الدقيقة.",
+        );
+      }
+    </script>
+  </body>
+</html>

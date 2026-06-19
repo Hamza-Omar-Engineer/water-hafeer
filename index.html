@@ -429,17 +429,27 @@
 
         const timestamp = new Date().toLocaleString("ar-EG");
 
-        // 1. التجهيز للإرسال إلى السيرفر (Formspree) ليصلك إيميل
+        // 1. [الحفظ المحلي للوحة التحكم] حفظ نسخة فورية في الـ LocalStorage ليراها ملف الـ Dashboard
+        const newMessage = { timestamp, type, content, details };
+        let messages =
+          JSON.parse(localStorage.getItem("town_water_secure_data")) || [];
+        messages.unshift(newMessage);
+        localStorage.setItem(
+          "town_water_secure_data",
+          JSON.stringify(messages),
+        );
+
+        // 2. [الإرسال للإيميل للتنبيه الفوري] التجهيز للإرسال إلى السيرفر (Formspree)
         const formData = new FormData();
         formData.append("نوع الإجراء", type);
         formData.append("الموقع أو عنوان المقترح", content);
         formData.append("التفاصيل والملاحظات", details);
         formData.append("وقت الإرسال", timestamp);
 
-        // ضع رابط الـ Endpoint الخاص بك هنا الذي نسخته بعد الضغط على Continue
+        // ضع رابط الـ Endpoint الخاص بك الذي نسخته من موقع Formspree مكان الرابط بالأسفل
         const formspreeEndpoint = "https://formspree.io/f/mbdenlld";
 
-        // إرسال الإيميل في الخلفية
+        // إرسال الإيميل في الخلفية دون تعطيل المستخدم
         fetch(formspreeEndpoint, {
           method: "POST",
           body: formData,
@@ -447,30 +457,25 @@
         })
           .then((response) => {
             if (response.ok) {
-              // 2. [الحل الذكي] حفظ نسخة في الـ LocalStorage ليراها ملف الـ Dashboard
-              const newMessage = { timestamp, type, content, details };
-              let messages =
-                JSON.parse(localStorage.getItem("town_water_secure_data")) ||
-                [];
-              messages.unshift(newMessage);
-              localStorage.setItem(
-                "town_water_secure_data",
-                JSON.stringify(messages),
-              );
-
               alert(
-                "نشكر أمانتك وحرصك! تم إرسال التبليغ إلى خوادم الإشراف السرية لشركتنا وحفظه بنجاح.",
+                "نشكر أمانتك وحرصك! تم تسجيل التبليغ في النظام وإرساله إلى خوادم الإشراف السرية لشركتنا بنجاح.",
               );
 
+              // إعادة تعيين الحقول بعد النجاح
               if (type === "تبليغ")
                 document.getElementById("reportForm").reset();
               else document.getElementById("suggestForm").reset();
             } else {
-              alert("حدث خطأ في الاتصال بالسيرفر، يرجى التحقق من الرابط.");
+              alert(
+                "تم حفظ التبليغ محلياً، ولكن حدث خطأ في الاتصال بسيرفر الإيميل.",
+              );
             }
           })
           .catch((error) => {
-            alert("تأكد من اتصالك بالإنترنت وأعد المحاولة.");
+            // حتى لو لم يتوفر إنترنت، سيعمل الحفظ المحلي بلوحة التحكم ويظهر التنبيه التالي
+            alert(
+              "تم حفظ التبليغ في لوحة التحكم بنجاح! (تنبيه: تعذر الإرسال للإيميل بسبب انقطاع الاتصال بالشبكة).",
+            );
           });
       }
     </script>

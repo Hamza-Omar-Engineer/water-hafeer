@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لوحة التحكم السرية - إدارة المنظومة</title>
+    <style>
+      :root {
+        --primary: #5c24fc;
+        --primary-light: #8257ff;
+        --bg-dark: #08060f;
+        --card-bg: rgba(255, 255, 255, 0.02);
+        --text-light: #f3f1ff;
+        --danger: #ff3366;
+        --success: #00e676;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+        padding: 40px;
+      }
+
+      .dashboard-wrapper {
+        max-width: 1300px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      }
+
+      .dash-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 25px;
+        margin-bottom: 30px;
+      }
+
+      .dash-title h2 {
+        font-size: 26px;
+        color: #fff;
+      }
+
+      .dash-title p {
+        font-size: 13px;
+        color: #7d7899;
+        margin-top: 5px;
+      }
+
+      .clear-btn {
+        background: none;
+        border: 1px solid var(--danger);
+        color: var(--danger);
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.3s;
+      }
+
+      .clear-btn:hover {
+        background: var(--danger);
+        color: white;
+        box-shadow: 0 0 15px rgba(255, 51, 102, 0.3);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: right;
+      }
+
+      th,
+      td {
+        padding: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        font-size: 14px;
+      }
+
+      th {
+        color: var(--primary-light);
+        font-weight: 600;
+        background: rgba(92, 36, 252, 0.05);
+      }
+
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.01);
+      }
+
+      .badge {
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        display: inline-block;
+      }
+      .badge-report {
+        background: rgba(255, 51, 102, 0.15);
+        color: var(--danger);
+        border: 1px solid rgba(255, 51, 102, 0.2);
+      }
+      .badge-sug {
+        background: rgba(0, 230, 118, 0.15);
+        color: var(--success);
+        border: 1px solid rgba(0, 230, 118, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-wrapper">
+      <div class="dash-header">
+        <div class="dash-title">
+          <h2>لوحة الإشراف وإدارة الوارد المحلي 🔒</h2>
+          <p>
+            هذه الصفحة تعمل محلياً على جهازك الشخصي وتستعرض البيانات المخزنة من
+            المتصفح مباشرة.
+          </p>
+        </div>
+        <button class="clear-btn" onclick="clearLocalStore()">
+          مسح قاعدة البيانات المحلية بالكامل
+        </button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 20%">تاريخ ووقت الإرسال</th>
+            <th style="width: 15%">نوع الإجراء</th>
+            <th style="width: 30%">العنوان الرئيسي / الموقع</th>
+            <th style="width: 35%">التفاصيل والملاحظات الواردة</th>
+          </tr>
+        </thead>
+        <tbody id="dashTableBody"></tbody>
+      </table>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", fetchLocalData);
+
+      function fetchLocalData() {
+        const tbody = document.getElementById("dashTableBody");
+        let data =
+          JSON.parse(localStorage.getItem("town_water_secure_data")) || [];
+
+        tbody.innerHTML = "";
+
+        if (data.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 40px; color:#6a6687;">لم يتم تلقي أي بلاغات أو مقترحات جديدة حتى الآن. صندوق الوارد فارغ.</td></tr>`;
+          return;
+        }
+
+        data.forEach((item) => {
+          const badgeClass =
+            item.type === "تبليغ" ? "badge-report" : "badge-sug";
+          tbody.innerHTML += `
+                    <tr>
+                        <td style="color:#a5a1ff; font-variant-numeric: tabular-nums;">${item.timestamp}</td>
+                        <td><span class="badge ${badgeClass}">${item.type}</span></td>
+                        <td style="font-weight: 600; color: #fff;">${item.content}</td>
+                        <td style="color:#b5b1d2; font-size: 13.5px;">${item.details}</td>
+                    </tr>
+                `;
+        });
+      }
+
+      function clearLocalStore() {
+        if (
+          confirm(
+            "تنبيه حساس: هل أنت متأكد تماماً من رغبتك في حذف وإفراغ كافة السجلات والبيانات المستقبلة على هذا الجهاز؟ لا يمكن التراجع عن هذا الإجراء.",
+          )
+        ) {
+          localStorage.removeItem("town_water_secure_data");
+          fetchLocalData();
+        }
+      }
+    </script>
+  </body>
+</html>

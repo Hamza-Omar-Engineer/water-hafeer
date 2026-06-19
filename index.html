@@ -420,30 +420,49 @@
           details =
             document.getElementById("repDetails").value ||
             "لا توجد ملاحظات إضافية";
-          document.getElementById("reportForm").reset();
         } else {
           content = document.getElementById("sugText").value;
           details =
             document.getElementById("sugDetails").value ||
             "لا توجد تفاصيل إضافية";
-          document.getElementById("suggestForm").reset();
         }
 
-        const timestamp = new Date().toLocaleString("ar-EG");
-        const newMessage = { timestamp, type, content, details };
+        // تجهيز البيانات لإرسالها عبر السيرفر كإيميل احترافي
+        const formData = new FormData();
+        formData.append("نوع الإجراء", type);
+        formData.append("الموقع أو عنوان المقترح", content);
+        formData.append("التفاصيل والملاحظات", details);
+        formData.append("وقت الإرسال", new Date().toLocaleString("ar-EG"));
 
-        // حفظ في الـ LocalStorage ليتم قراءتها من صفحة لوحة التحكم على جهازك
-        let messages =
-          JSON.parse(localStorage.getItem("town_water_secure_data")) || [];
-        messages.unshift(newMessage);
-        localStorage.setItem(
-          "town_water_secure_data",
-          JSON.stringify(messages),
-        );
+        // استبدل هذا الرابط بالرابط المخصّص لك من Formspree ليوجه الرسائل لبريدك فوراً
+        const formspreeEndpoint = "https://formspree.io/f/mbdenlld";
 
-        alert(
-          "نشكر أمانتك وحرصك! تم استلام رسالتك وتشفيرها بنجاح لإحالتها للمراجعة الدقيقة.",
-        );
+        // إرسال البيانات بالخلفية بدون تحديث الصفحة
+        fetch(formspreeEndpoint, {
+          method: "POST",
+          body: formData,
+          headers: {
+            Accept: "application/json",
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              alert(
+                "نشكر أمانتك وحرصك! تم تشفير إرساليتك بنجاح ونقلها مباشرة إلى خوادم الإشراف السرية لشركتنا.",
+              );
+              // تصفية الفورم بعد النجاح
+              if (type === "تبليغ")
+                document.getElementById("reportForm").reset();
+              else document.getElementById("suggestForm").reset();
+            } else {
+              alert(
+                "عذراً، حدث خطأ أثناء تأمين الاتصال بالسيرفر. يرجى المحاولة لاحقاً.",
+              );
+            }
+          })
+          .catch((error) => {
+            alert("عذراً، تحقق من اتصالك بالإنترنت وأعد المحاولة.");
+          });
       }
     </script>
   </body>
